@@ -1,0 +1,99 @@
+from __future__ import annotations
+
+from domain.chapter.models import ChapterDraft, ChapterEvent
+
+
+CHAPTER_THREE_TEXT = """# 第三章 督察的封锁线
+
+梁烛到西码头时，第一件事不是看尸体，也不是问证人。
+
+他先看钟。
+
+七座公钟的副盘挂在税关楼外墙上，本该像七只被同一根线牵住的眼睛，同时转动，同时停顿，同时把整座海晷港钉在统一时间里。现在，西码头那只副盘的分针停在四点二十三分，秒针却还在走。
+
+这比死人麻烦。
+
+死人会留下伤口、凶器、债务和仇人。钟如果出了错，留下的是秩序本身的裂缝。
+
+“外勤队等命令。”梁烛说。
+
+副官怔了一下：“督察，巡灯船报告有人从第三水闸逃走。现在追，还来得及。”
+
+“追谁？”
+
+副官答不上来。
+
+梁烛把封锁令按在税关门上。纸面上的潮钟署徽记吸住木板，边缘渗出一圈暗蓝色蜡痕。封锁令一生效，码头上所有民用记录都会转入署内副本，普通书记员只能看见删改后的版本。
+
+这是资源，也是代价。
+
+他今天只有一张封锁令。用在西码头，就不能再用在城南煤栈；压住七分钟空白，就可能放走真正携带盐镜的人。
+
+但外勤队如果当街搜捕，明天早报就会写：潮钟署深夜围堵码头，七座公钟疑似失准。到了那一步，秩序会比嫌疑人逃得更快。
+
+梁烛翻开内署密录，看见“永动摆轮”四个字时，脸色沉了下去。
+
+黑市把它叫永动机，普通走私客信了这个名字，才会以为自己捡到了一把不需要上膛的枪。密录上写得很清楚：该装置不会创造动力，只会把消耗转移到未来分钟、本名锚或旁观者时间债里。
+
+所以第三水闸不是被打开了。
+
+是有人从自己的未来里借了七分钟，让水闸在现在替她让路。
+
+梁烛合上密录，对副官说：“不追。查第三水闸附近所有缺帧病例，尤其是蓝蜡商会登记过治疗契约的人。”
+
+副官低声问：“那逃走的人呢？”
+
+梁烛望向雾里的旧水道。
+
+“她已经付过一次代价了。付过代价的人，比没付过的人更容易再付第二次。”
+"""
+
+
+def build_chapter_three_draft() -> ChapterDraft:
+    return ChapterDraft(
+        id="chapter_003",
+        title="督察的封锁线",
+        viewpoint_character_ids=["liang_zhu"],
+        text=CHAPTER_THREE_TEXT,
+        events=[
+            ChapterEvent(
+                id="c003_e001",
+                viewpoint_character_id="liang_zhu",
+                actor_id="liang_zhu",
+                event_type="containment",
+                description="Liang studies the public clock failure before chasing any suspect.",
+                used_information=["west_dock_gap"],
+                supports_actor_goal=True,
+                time_spent=1,
+                minimum_time_required=1,
+            ),
+            ChapterEvent(
+                id="c003_e002",
+                viewpoint_character_id="liang_zhu",
+                actor_id="liang_zhu",
+                event_type="containment",
+                description="Liang spends the seal order on the dock records instead of a public manhunt.",
+                used_information=["west_dock_gap", "silent_order_lead"],
+                uncertain_information=["silent_order_lead"],
+                available_solution_resources=["field_team", "seal_order"],
+                considered_resources=["field_team", "seal_order"],
+                omitted_resource_reasons={
+                    "field_team": "A visible chase would expose the public clock failure."
+                },
+                consumed_resources={"seal_order": 1},
+                supports_actor_goal=True,
+                time_spent=1,
+                minimum_time_required=1,
+            ),
+            ChapterEvent(
+                id="c003_e003",
+                viewpoint_character_id="liang_zhu",
+                actor_id="liang_zhu",
+                event_type="deduction",
+                description="Liang connects the water lock movement to the perpetual pendulum's time debt.",
+                used_information=["perpetual_pendulum_cost"],
+                dangerous_information_consequences=["perpetual_pendulum_cost"],
+                supports_actor_goal=True,
+            ),
+        ],
+    )

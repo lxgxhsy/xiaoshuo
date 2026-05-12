@@ -1,0 +1,201 @@
+from __future__ import annotations
+
+from domain.character.models import CharacterProfile
+from domain.graph.models import WorldGraph
+from domain.knowledge.models import KnowledgeNode
+from domain.rule.models import HardRule
+from domain.skill.models import SkillCost, SkillDefinition
+
+
+def build_fog_clock_world() -> WorldGraph:
+    return WorldGraph(
+        characters={
+            "xu_guanchao": CharacterProfile(
+                id="xu_guanchao",
+                name="Xu Guanchao",
+                core_desire="clear his brother's name",
+                long_term_goal="trace the real source of the missing minutes",
+                current_goal="explain the seven-minute gap at the west dock",
+                resources={"silent_wax": 1, "archive_access": 1, "debt_favor": 1},
+                known_information={"west_dock_gap", "silent_wax_cost"},
+                cognitive_layer=2,
+                power_level=0,
+                constraints=["not licensed to touch high-risk clock materials"],
+                relationships={"older_brother": "disgraced suspect in the daylight error"},
+                is_protagonist=True,
+            ),
+            "xia_kui": CharacterProfile(
+                id="xia_kui",
+                name="Xia Kui",
+                core_desire="stabilize her mother's echoing illness",
+                long_term_goal="buy out the treatment contract held by the Blue Wax Guild",
+                current_goal="deliver the salt mirror without being named",
+                resources={
+                    "salt_mirror": 1,
+                    "canal_route": 1,
+                    "false_identity": 1,
+                    "future_minutes": 7,
+                },
+                known_information={"salt_mirror_testimony", "perpetual_pendulum_rumor"},
+                cognitive_layer=2,
+                power_level=1,
+                constraints=["owes the Blue Wax Guild three compulsory commissions"],
+            ),
+            "liang_zhu": CharacterProfile(
+                id="liang_zhu",
+                name="Liang Zhu",
+                core_desire="preserve city order",
+                long_term_goal="enter the inner bureau and read the daylight error archive",
+                current_goal="contain the west dock incident",
+                resources={"field_team": 1, "seal_order": 1, "silent_wax": 3},
+                known_information={"west_dock_gap", "silent_order_lead", "perpetual_pendulum_cost"},
+                cognitive_layer=3,
+                power_level=2,
+                constraints=["must not admit the bureau has lost control of the public clocks"],
+            ),
+            "pei_mu": CharacterProfile(
+                id="pei_mu",
+                name="Pei Mu",
+                core_desire="break the city's false time",
+                long_term_goal="desynchronize the seven public clocks",
+                current_goal="recover the salt mirror",
+                resources={"blind_chime": 1, "clockshop_oath": 2},
+                known_information={"eleventh_chime"},
+                cognitive_layer=4,
+                power_level=3,
+                constraints=["loses selfhood briefly after hearing true chimes"],
+            ),
+        },
+        knowledge={
+            "west_dock_gap": KnowledgeNode(
+                id="west_dock_gap",
+                content="Every west dock clock record is seven minutes short.",
+                source="public clock ledger",
+                reliability="absolute",
+                danger_level="safe",
+                cognitive_layer=1,
+                known_by={"xu_guanchao", "liang_zhu"},
+            ),
+            "silent_wax_cost": KnowledgeNode(
+                id="silent_wax_cost",
+                content="Burning silent wax erases one concrete auditory memory.",
+                source="bureau manual",
+                reliability="absolute",
+                danger_level="unsafe",
+                cognitive_layer=2,
+                known_by={"xu_guanchao", "liang_zhu"},
+            ),
+            "salt_mirror_testimony": KnowledgeNode(
+                id="salt_mirror_testimony",
+                content="The salt mirror preserves a deleted dock witness statement.",
+                source="salt mirror",
+                reliability="uncertain",
+                danger_level="unsafe",
+                cognitive_layer=2,
+                known_by={"xia_kui", "xu_guanchao"},
+            ),
+            "perpetual_pendulum_rumor": KnowledgeNode(
+                id="perpetual_pendulum_rumor",
+                content="A black-market device can keep a mechanism moving without visible fuel.",
+                source="Blue Wax Guild rumor",
+                reliability="rumor",
+                danger_level="unsafe",
+                cognitive_layer=2,
+                known_by={"xia_kui"},
+            ),
+            "perpetual_pendulum_cost": KnowledgeNode(
+                id="perpetual_pendulum_cost",
+                content="The so-called perpetual device consumes future minutes or name anchors.",
+                source="sealed bureau memo",
+                reliability="absolute",
+                danger_level="unsafe",
+                cognitive_layer=3,
+                known_by={"liang_zhu"},
+            ),
+            "silent_order_lead": KnowledgeNode(
+                id="silent_order_lead",
+                content="The west dock incident may involve the Silent Order.",
+                source="field rumor",
+                reliability="rumor",
+                danger_level="safe",
+                cognitive_layer=2,
+                known_by={"liang_zhu"},
+            ),
+            "eleventh_chime": KnowledgeNode(
+                id="eleventh_chime",
+                content="An impossible chime exists above the city clock system.",
+                source="forbidden clockwork resonance",
+                reliability="unknown",
+                danger_level="fatal",
+                cognitive_layer=5,
+                known_by={"pei_mu"},
+                expressible_in_lower_layers=False,
+            ),
+            "white_day_source": KnowledgeNode(
+                id="white_day_source",
+                content="The true cause of the daylight error is beyond first-volume cognition.",
+                source="unreachable world layer",
+                reliability="unknown",
+                danger_level="fatal",
+                cognitive_layer=6,
+                known_by=set(),
+                expressible_in_lower_layers=False,
+                foreshadowing_evidence=[
+                    "the seven-minute gap",
+                    "the deleted eighth clock tower",
+                    "contradictory public clock ledgers",
+                ],
+            ),
+        },
+        hard_rules={
+            "silent_wax_cost": HardRule(
+                id="silent_wax_cost",
+                name="Silent wax consumes hearing memory",
+                rule_type="resource_cost",
+                condition="A character burns silent wax.",
+                effect="The user loses one concrete auditory memory.",
+                is_hard=True,
+            ),
+            "eleventh_chime_inexpressible": HardRule(
+                id="eleventh_chime_inexpressible",
+                name="The eleventh chime cannot be explained downward",
+                rule_type="cognitive_layer",
+                condition="A lower-layer character receives the eleventh chime.",
+                effect="The transfer fails or arrives as sensory damage.",
+                is_hard=True,
+            ),
+            "perpetual_motion_debt": HardRule(
+                id="perpetual_motion_debt",
+                name="Perpetual motion only moves the cost",
+                rule_type="resource_cost",
+                condition="A character activates the perpetual pendulum.",
+                effect="The event must consume future minutes, bystander time debt, or a name anchor.",
+                is_hard=True,
+            ),
+        },
+        skills={
+            "perpetual_pendulum": SkillDefinition(
+                id="perpetual_pendulum",
+                name="Perpetual Pendulum",
+                law_rank=7,
+                description="A device that appears to maintain motion without fuel by moving the cost into time debt.",
+                activation_condition="Close a tidal-copper loop and calibrate it with a salt mirror.",
+                visible_effect="A machine or ritual keeps moving without visible fuel.",
+                costs=[
+                    SkillCost(
+                        resource_id="future_minutes",
+                        quantity=7,
+                        description="The user loses seven future minutes as delayed memory gaps.",
+                        hidden_from_viewpoint=True,
+                    )
+                ],
+                side_effects=[
+                    "future memory gaps",
+                    "echoing illness if repeated",
+                    "name anchor erosion after seven cycles",
+                ],
+                hard_rule_ids=["perpetual_motion_debt"],
+                is_perpetual_motion_claim=True,
+            )
+        },
+    )
