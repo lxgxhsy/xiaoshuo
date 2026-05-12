@@ -1,0 +1,18 @@
+# Local source reference text. Keep it out of the repository.
+docs/诡秘之主 作者：爱潜水的乌贼.txt
+
+# Python / tooling caches
+__pycache__/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Node / frontend tooling
+node_modules/
+dist/
+build/
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+.vscode/
